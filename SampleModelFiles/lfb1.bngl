@@ -1,0 +1,68 @@
+#Broken model
+begin model
+
+begin parameters
+
+NA 6.02214e23
+V 1e-9
+
+kf 5e6/(NA*V)
+kr 0.005 
+
+kmod 1
+
+end parameters
+
+begin molecule types
+
+X(a,a)
+Y(b,c,d~0~1)
+
+end molecule types
+
+begin seed species
+
+X(a,a) 1e5
+Y(b,c,d~0) 1e5
+
+end seed species
+
+begin observables
+
+Molecules Xtot X()
+Molecules Ytot Y()
+Species Xfree X(a,a)
+Molecules Yfree Y(b,c)
+Molecules Yd0 Y(d~0)
+Molecules Yd1 Y(d~1)
+
+end observables
+
+begin functions
+
+factor(x) if(Ytot(x)>0,1,0)
+
+end functions
+
+begin reaction rules
+
+XaYbBind: X(a,a)+Y(b)<->X(a!1,a).Y(b!1) kf,kr
+XaYcBind: X(a,a)+Y(c)<->X(a,a!1).Y(c!1) kf,kr
+
+XaPlusYbBind: X(a,a!+)+Y(b)<->X(a!1,a!+).Y(b!1) 1000*kf,kr
+XaPlusYcBind: X(a!+,a)+Y(c)<->X(a!+,a!1).Y(c!1) 1000*kf,kr
+
+
+Bug1: %z:X(a!1,a!+).Y(b!1,d~0)->X(a!1,a!+).Y(b!1,d~1) factor(z)*kmod # factor(z) should evaluate to 1
+Bug2: %z:X(a!+,a!1).Y(c!1,d~0)->X(a!+,a!1).Y(c!1,d~1) factor(z)*kmod # factor(z) should evaluate to 1
+
+end reaction rules
+
+end model
+
+begin actions
+
+simulate({method=>"nf",gml=>2000000,complex=>1,get_final_state=>0,print_functions=>1, t_start=>0,t_end=>300,n_steps=>300})
+          
+end actions
+

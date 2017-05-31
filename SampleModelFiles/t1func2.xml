@@ -1,0 +1,978 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created by BioNetGen 2.2.6  -->
+<sbml xmlns="http://www.sbml.org/sbml/level3" level="3" version="1">
+  <model id="t1func2">
+    <ListOfParameters>
+      <Parameter id="numOfMoleculeX" type="Constant" value="2000"/>
+      <Parameter id="numOfMoleculeY" type="Constant" value="2000"/>
+      <Parameter id="numOfMoleculeW" type="Constant" value="500"/>
+      <Parameter id="XdephosRate" type="Constant" value="0.1"/>
+      <Parameter id="kXYOn" type="Constant" value="0.001"/>
+      <Parameter id="kXYOff" type="Constant" value="0.2"/>
+      <Parameter id="kXWOn1" type="Constant" value="0.05"/>
+      <Parameter id="kXWOn2" type="Constant" value="0.05"/>
+      <Parameter id="kXWOff1" type="Constant" value="0.8"/>
+      <Parameter id="kXWOff2" type="Constant" value="0.8"/>
+      <Parameter id="kXCat" type="Constant" value="0.8"/>
+      <Parameter id="kXCat1" type="Constant" value="0.001"/>
+      <Parameter id="kXCat2" type="Constant" value="0.2"/>
+      <Parameter id="kXCat3" type="Constant" value="0.8"/>
+      <Parameter id="Unphos" type="Constant" value="0"/>
+      <Parameter id="Phos" type="Constant" value="1"/>
+      <Parameter id="Half" type="Constant" value="0.5"/>
+      <Parameter id="OneThird" type="Constant" value="0.333333"/>
+      <Parameter id="_rateLaw3" type="Constant" value="0.2666664"/>
+    </ListOfParameters>
+    <ListOfMoleculeTypes>
+      <MoleculeType id="W">
+        <ListOfComponentTypes>
+          <ComponentType id="x"/>
+        </ListOfComponentTypes>
+      </MoleculeType>
+      <MoleculeType id="X">
+        <ListOfComponentTypes>
+          <ComponentType id="y"/>
+          <ComponentType id="w"/>
+          <ComponentType id="p">
+            <ListOfAllowedStates>
+              <AllowedState id="Unphos"/>
+              <AllowedState id="Phos"/>
+            </ListOfAllowedStates>
+          </ComponentType>
+        </ListOfComponentTypes>
+      </MoleculeType>
+      <MoleculeType id="Y">
+        <ListOfComponentTypes>
+          <ComponentType id="x"/>
+        </ListOfComponentTypes>
+      </MoleculeType>
+    </ListOfMoleculeTypes>
+    <ListOfCompartments>
+    </ListOfCompartments>
+    <ListOfSpecies>
+      <Species id="S1"  concentration="numOfMoleculeX" name="X(p~Unphos,w,y)">
+        <ListOfMolecules>
+          <Molecule id="S1_M1" name="X">
+            <ListOfComponents>
+              <Component id="S1_M1_C1" name="p" state="Unphos" numberOfBonds="0"/>
+              <Component id="S1_M1_C2" name="w" numberOfBonds="0"/>
+              <Component id="S1_M1_C3" name="y" numberOfBonds="0"/>
+            </ListOfComponents>
+          </Molecule>
+        </ListOfMolecules>
+      </Species>
+      <Species id="S2"  concentration="numOfMoleculeY" name="Y(x)">
+        <ListOfMolecules>
+          <Molecule id="S2_M1" name="Y">
+            <ListOfComponents>
+              <Component id="S2_M1_C1" name="x" numberOfBonds="0"/>
+            </ListOfComponents>
+          </Molecule>
+        </ListOfMolecules>
+      </Species>
+      <Species id="S3"  concentration="numOfMoleculeW" name="W(x)">
+        <ListOfMolecules>
+          <Molecule id="S3_M1" name="W">
+            <ListOfComponents>
+              <Component id="S3_M1_C1" name="x" numberOfBonds="0"/>
+            </ListOfComponents>
+          </Molecule>
+        </ListOfMolecules>
+      </Species>
+    </ListOfSpecies>
+    <ListOfReactionRules>
+      <ReactionRule id="RR1" name="XUnPhos" symmetry_factor="1">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR1_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR1_RP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR1_RP1_M1_C1" name="p" state="Phos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR1_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR1_PP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR1_PP1_M1_C1" name="p" state="Unphos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR1_RateLaw" type="Ele" totalrate="0">
+          <ListOfRateConstants>
+            <RateConstant value="XdephosRate"/>
+          </ListOfRateConstants>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR1_RP1_M1" targetID="RR1_PP1_M1"/>
+          <MapItem sourceID="RR1_RP1_M1_C1" targetID="RR1_PP1_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <StateChange site="RR1_RP1_M1_C1" finalState="Unphos"/>
+        </ListOfOperations>
+      </ReactionRule>
+      <ReactionRule id="RR2" name="XYBind" symmetry_factor="1">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR2_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR2_RP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR2_RP1_M1_C1" name="y" numberOfBonds="0"/>
+                  <Component id="RR2_RP1_M1_C2" name="p" state="Unphos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+          <ReactantPattern id="RR2_RP2">
+            <ListOfMolecules>
+              <Molecule id="RR2_RP2_M1" name="Y">
+                <ListOfComponents>
+                  <Component id="RR2_RP2_M1_C1" name="x" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR2_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR2_PP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR2_PP1_M1_C1" name="y" numberOfBonds="1"/>
+                  <Component id="RR2_PP1_M1_C2" name="p" state="Unphos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+              <Molecule id="RR2_PP1_M2" name="Y">
+                <ListOfComponents>
+                  <Component id="RR2_PP1_M2_C1" name="x" numberOfBonds="1"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+            <ListOfBonds>
+              <Bond id="RR2_PP1_B1" site1="RR2_PP1_M1_C1" site2="RR2_PP1_M2_C1"/>
+            </ListOfBonds>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR2_RateLaw" type="Ele" totalrate="0">
+          <ListOfRateConstants>
+            <RateConstant value="kXYOn"/>
+          </ListOfRateConstants>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR2_RP1_M1" targetID="RR2_PP1_M1"/>
+          <MapItem sourceID="RR2_RP1_M1_C1" targetID="RR2_PP1_M1_C1"/>
+          <MapItem sourceID="RR2_RP1_M1_C2" targetID="RR2_PP1_M1_C2"/>
+          <MapItem sourceID="RR2_RP2_M1" targetID="RR2_PP1_M2"/>
+          <MapItem sourceID="RR2_RP2_M1_C1" targetID="RR2_PP1_M2_C1"/>
+        </Map>
+        <ListOfOperations>
+          <AddBond site1="RR2_RP1_M1_C1" site2="RR2_RP2_M1_C1"/>
+        </ListOfOperations>
+      </ReactionRule>
+      <ReactionRule id="RR3" name="_reverse_XYBind" symmetry_factor="1">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR3_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR3_RP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR3_RP1_M1_C1" name="y" numberOfBonds="1"/>
+                  <Component id="RR3_RP1_M1_C2" name="p" state="Unphos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+              <Molecule id="RR3_RP1_M2" name="Y">
+                <ListOfComponents>
+                  <Component id="RR3_RP1_M2_C1" name="x" numberOfBonds="1"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+            <ListOfBonds>
+              <Bond id="RR3_RP1_B1" site1="RR3_RP1_M1_C1" site2="RR3_RP1_M2_C1"/>
+            </ListOfBonds>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR3_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR3_PP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR3_PP1_M1_C1" name="y" numberOfBonds="0"/>
+                  <Component id="RR3_PP1_M1_C2" name="p" state="Unphos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+          <ProductPattern id="RR3_PP2">
+            <ListOfMolecules>
+              <Molecule id="RR3_PP2_M1" name="Y">
+                <ListOfComponents>
+                  <Component id="RR3_PP2_M1_C1" name="x" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR3_RateLaw" type="Ele" totalrate="0">
+          <ListOfRateConstants>
+            <RateConstant value="kXYOff"/>
+          </ListOfRateConstants>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR3_RP1_M1" targetID="RR3_PP1_M1"/>
+          <MapItem sourceID="RR3_RP1_M1_C1" targetID="RR3_PP1_M1_C1"/>
+          <MapItem sourceID="RR3_RP1_M1_C2" targetID="RR3_PP1_M1_C2"/>
+          <MapItem sourceID="RR3_RP1_M2" targetID="RR3_PP2_M1"/>
+          <MapItem sourceID="RR3_RP1_M2_C1" targetID="RR3_PP2_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <DeleteBond site1="RR3_RP1_M1_C1" site2="RR3_RP1_M2_C1"/>
+        </ListOfOperations>
+      </ReactionRule>
+      <ReactionRule id="RR4" name="XWBindCond2" symmetry_factor="1">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR4_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR4_RP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR4_RP1_M1_C1" name="w" numberOfBonds="0"/>
+                  <Component id="RR4_RP1_M1_C2" name="p" state="Unphos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+          <ReactantPattern id="RR4_RP2">
+            <ListOfMolecules>
+              <Molecule id="RR4_RP2_M1" name="W">
+                <ListOfComponents>
+                  <Component id="RR4_RP2_M1_C1" name="x" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR4_PP1" label="u">
+            <ListOfMolecules>
+              <Molecule id="RR4_PP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR4_PP1_M1_C1" name="w" numberOfBonds="1"/>
+                  <Component id="RR4_PP1_M1_C2" name="p" state="Unphos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+              <Molecule id="RR4_PP1_M2" name="W">
+                <ListOfComponents>
+                  <Component id="RR4_PP1_M2_C1" name="x" numberOfBonds="1"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+            <ListOfBonds>
+              <Bond id="RR4_PP1_B1" site1="RR4_PP1_M1_C1" site2="RR4_PP1_M2_C1"/>
+            </ListOfBonds>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR4_RateLaw" type="Function" name="_rateLaw1" totalrate="0">
+          <ListOfArguments>
+            <Argument id="u" type="ObjectReference" value="RR4_PP1"/>
+          </ListOfArguments>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR4_RP1_M1" targetID="RR4_PP1_M1"/>
+          <MapItem sourceID="RR4_RP1_M1_C1" targetID="RR4_PP1_M1_C1"/>
+          <MapItem sourceID="RR4_RP1_M1_C2" targetID="RR4_PP1_M1_C2"/>
+          <MapItem sourceID="RR4_RP2_M1" targetID="RR4_PP1_M2"/>
+          <MapItem sourceID="RR4_RP2_M1_C1" targetID="RR4_PP1_M2_C1"/>
+        </Map>
+        <ListOfOperations>
+          <AddBond site1="RR4_RP1_M1_C1" site2="RR4_RP2_M1_C1"/>
+        </ListOfOperations>
+      </ReactionRule>
+      <ReactionRule id="RR5" name="XWUnBind" symmetry_factor="1">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR5_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR5_RP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR5_RP1_M1_C1" name="w" numberOfBonds="1"/>
+                  <Component id="RR5_RP1_M1_C2" name="p" state="Unphos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+              <Molecule id="RR5_RP1_M2" name="W">
+                <ListOfComponents>
+                  <Component id="RR5_RP1_M2_C1" name="x" numberOfBonds="1"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+            <ListOfBonds>
+              <Bond id="RR5_RP1_B1" site1="RR5_RP1_M1_C1" site2="RR5_RP1_M2_C1"/>
+            </ListOfBonds>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR5_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR5_PP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR5_PP1_M1_C1" name="w" numberOfBonds="0"/>
+                  <Component id="RR5_PP1_M1_C2" name="p" state="Unphos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+          <ProductPattern id="RR5_PP2">
+            <ListOfMolecules>
+              <Molecule id="RR5_PP2_M1" name="W">
+                <ListOfComponents>
+                  <Component id="RR5_PP2_M1_C1" name="x" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR5_RateLaw" type="Ele" totalrate="0">
+          <ListOfRateConstants>
+            <RateConstant value="kXWOff1"/>
+          </ListOfRateConstants>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR5_RP1_M1" targetID="RR5_PP1_M1"/>
+          <MapItem sourceID="RR5_RP1_M1_C1" targetID="RR5_PP1_M1_C1"/>
+          <MapItem sourceID="RR5_RP1_M1_C2" targetID="RR5_PP1_M1_C2"/>
+          <MapItem sourceID="RR5_RP1_M2" targetID="RR5_PP2_M1"/>
+          <MapItem sourceID="RR5_RP1_M2_C1" targetID="RR5_PP2_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <DeleteBond site1="RR5_RP1_M1_C1" site2="RR5_RP1_M2_C1"/>
+        </ListOfOperations>
+      </ReactionRule>
+      <ReactionRule id="RR6" name="XphosWBind" symmetry_factor="1">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR6_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR6_RP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR6_RP1_M1_C1" name="w" numberOfBonds="0"/>
+                  <Component id="RR6_RP1_M1_C2" name="p" state="Phos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+          <ReactantPattern id="RR6_RP2" label="v">
+            <ListOfMolecules>
+              <Molecule id="RR6_RP2_M1" name="W">
+                <ListOfComponents>
+                  <Component id="RR6_RP2_M1_C1" name="x" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR6_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR6_PP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR6_PP1_M1_C1" name="w" numberOfBonds="1"/>
+                  <Component id="RR6_PP1_M1_C2" name="p" state="Phos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+              <Molecule id="RR6_PP1_M2" name="W">
+                <ListOfComponents>
+                  <Component id="RR6_PP1_M2_C1" name="x" numberOfBonds="1"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+            <ListOfBonds>
+              <Bond id="RR6_PP1_B1" site1="RR6_PP1_M1_C1" site2="RR6_PP1_M2_C1"/>
+            </ListOfBonds>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR6_RateLaw" type="Function" name="_rateLaw2" totalrate="0">
+          <ListOfArguments>
+            <Argument id="v" type="ObjectReference" value="RR6_RP2"/>
+          </ListOfArguments>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR6_RP1_M1" targetID="RR6_PP1_M1"/>
+          <MapItem sourceID="RR6_RP1_M1_C1" targetID="RR6_PP1_M1_C1"/>
+          <MapItem sourceID="RR6_RP1_M1_C2" targetID="RR6_PP1_M1_C2"/>
+          <MapItem sourceID="RR6_RP2_M1" targetID="RR6_PP1_M2"/>
+          <MapItem sourceID="RR6_RP2_M1_C1" targetID="RR6_PP1_M2_C1"/>
+        </Map>
+        <ListOfOperations>
+          <AddBond site1="RR6_RP1_M1_C1" site2="RR6_RP2_M1_C1"/>
+        </ListOfOperations>
+      </ReactionRule>
+      <ReactionRule id="RR7" name="XphosWUnBind" symmetry_factor="1">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR7_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR7_RP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR7_RP1_M1_C1" name="w" numberOfBonds="1"/>
+                  <Component id="RR7_RP1_M1_C2" name="p" state="Phos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+              <Molecule id="RR7_RP1_M2" name="W">
+                <ListOfComponents>
+                  <Component id="RR7_RP1_M2_C1" name="x" numberOfBonds="1"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+            <ListOfBonds>
+              <Bond id="RR7_RP1_B1" site1="RR7_RP1_M1_C1" site2="RR7_RP1_M2_C1"/>
+            </ListOfBonds>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR7_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR7_PP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR7_PP1_M1_C1" name="w" numberOfBonds="0"/>
+                  <Component id="RR7_PP1_M1_C2" name="p" state="Phos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+          <ProductPattern id="RR7_PP2">
+            <ListOfMolecules>
+              <Molecule id="RR7_PP2_M1" name="W">
+                <ListOfComponents>
+                  <Component id="RR7_PP2_M1_C1" name="x" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR7_RateLaw" type="Ele" totalrate="0">
+          <ListOfRateConstants>
+            <RateConstant value="kXWOff2"/>
+          </ListOfRateConstants>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR7_RP1_M1" targetID="RR7_PP1_M1"/>
+          <MapItem sourceID="RR7_RP1_M1_C1" targetID="RR7_PP1_M1_C1"/>
+          <MapItem sourceID="RR7_RP1_M1_C2" targetID="RR7_PP1_M1_C2"/>
+          <MapItem sourceID="RR7_RP1_M2" targetID="RR7_PP2_M1"/>
+          <MapItem sourceID="RR7_RP1_M2_C1" targetID="RR7_PP2_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <DeleteBond site1="RR7_RP1_M1_C1" site2="RR7_RP1_M2_C1"/>
+        </ListOfOperations>
+      </ReactionRule>
+      <ReactionRule id="RR8" name="XYunBindPhos" symmetry_factor="1">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR8_RP1">
+            <ListOfMolecules>
+              <Molecule id="RR8_RP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR8_RP1_M1_C1" name="y" numberOfBonds="1"/>
+                  <Component id="RR8_RP1_M1_C2" name="p" state="Unphos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+              <Molecule id="RR8_RP1_M2" name="Y">
+                <ListOfComponents>
+                  <Component id="RR8_RP1_M2_C1" name="x" numberOfBonds="1"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+            <ListOfBonds>
+              <Bond id="RR8_RP1_B1" site1="RR8_RP1_M1_C1" site2="RR8_RP1_M2_C1"/>
+            </ListOfBonds>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR8_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR8_PP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR8_PP1_M1_C1" name="y" numberOfBonds="0"/>
+                  <Component id="RR8_PP1_M1_C2" name="p" state="Phos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+          <ProductPattern id="RR8_PP2">
+            <ListOfMolecules>
+              <Molecule id="RR8_PP2_M1" name="Y">
+                <ListOfComponents>
+                  <Component id="RR8_PP2_M1_C1" name="x" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR8_RateLaw" type="Ele" totalrate="0">
+          <ListOfRateConstants>
+            <RateConstant value="_rateLaw3"/>
+          </ListOfRateConstants>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR8_RP1_M1" targetID="RR8_PP1_M1"/>
+          <MapItem sourceID="RR8_RP1_M1_C1" targetID="RR8_PP1_M1_C1"/>
+          <MapItem sourceID="RR8_RP1_M1_C2" targetID="RR8_PP1_M1_C2"/>
+          <MapItem sourceID="RR8_RP1_M2" targetID="RR8_PP2_M1"/>
+          <MapItem sourceID="RR8_RP1_M2_C1" targetID="RR8_PP2_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <StateChange site="RR8_RP1_M1_C2" finalState="Phos"/>
+          <DeleteBond site1="RR8_RP1_M1_C1" site2="RR8_RP1_M2_C1"/>
+        </ListOfOperations>
+      </ReactionRule>
+      <ReactionRule id="RR9" name="XYunBindPhosCond1" symmetry_factor="1">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR9_RP1" label="u">
+            <ListOfMolecules>
+              <Molecule id="RR9_RP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR9_RP1_M1_C1" name="y" numberOfBonds="1"/>
+                  <Component id="RR9_RP1_M1_C2" name="p" state="Unphos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+              <Molecule id="RR9_RP1_M2" name="Y">
+                <ListOfComponents>
+                  <Component id="RR9_RP1_M2_C1" name="x" numberOfBonds="1"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+            <ListOfBonds>
+              <Bond id="RR9_RP1_B1" site1="RR9_RP1_M1_C1" site2="RR9_RP1_M2_C1"/>
+            </ListOfBonds>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR9_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR9_PP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR9_PP1_M1_C1" name="y" numberOfBonds="0"/>
+                  <Component id="RR9_PP1_M1_C2" name="p" state="Phos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+          <ProductPattern id="RR9_PP2">
+            <ListOfMolecules>
+              <Molecule id="RR9_PP2_M1" name="Y">
+                <ListOfComponents>
+                  <Component id="RR9_PP2_M1_C1" name="x" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR9_RateLaw" type="Function" name="_rateLaw4" totalrate="0">
+          <ListOfArguments>
+            <Argument id="u" type="ObjectReference" value="RR9_RP1"/>
+          </ListOfArguments>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR9_RP1_M1" targetID="RR9_PP1_M1"/>
+          <MapItem sourceID="RR9_RP1_M1_C1" targetID="RR9_PP1_M1_C1"/>
+          <MapItem sourceID="RR9_RP1_M1_C2" targetID="RR9_PP1_M1_C2"/>
+          <MapItem sourceID="RR9_RP1_M2" targetID="RR9_PP2_M1"/>
+          <MapItem sourceID="RR9_RP1_M2_C1" targetID="RR9_PP2_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <StateChange site="RR9_RP1_M1_C2" finalState="Phos"/>
+          <DeleteBond site1="RR9_RP1_M1_C1" site2="RR9_RP1_M2_C1"/>
+        </ListOfOperations>
+      </ReactionRule>
+      <ReactionRule id="RR10" name="XYunBindPhosCond2" symmetry_factor="1">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR10_RP1" label="u">
+            <ListOfMolecules>
+              <Molecule id="RR10_RP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR10_RP1_M1_C1" name="y" numberOfBonds="1"/>
+                  <Component id="RR10_RP1_M1_C2" name="p" state="Unphos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+              <Molecule id="RR10_RP1_M2" name="Y">
+                <ListOfComponents>
+                  <Component id="RR10_RP1_M2_C1" name="x" numberOfBonds="1"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+            <ListOfBonds>
+              <Bond id="RR10_RP1_B1" site1="RR10_RP1_M1_C1" site2="RR10_RP1_M2_C1"/>
+            </ListOfBonds>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR10_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR10_PP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR10_PP1_M1_C1" name="y" numberOfBonds="0"/>
+                  <Component id="RR10_PP1_M1_C2" name="p" state="Phos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+          <ProductPattern id="RR10_PP2">
+            <ListOfMolecules>
+              <Molecule id="RR10_PP2_M1" name="Y">
+                <ListOfComponents>
+                  <Component id="RR10_PP2_M1_C1" name="x" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR10_RateLaw" type="Function" name="_rateLaw5" totalrate="0">
+          <ListOfArguments>
+            <Argument id="u" type="ObjectReference" value="RR10_RP1"/>
+          </ListOfArguments>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR10_RP1_M1" targetID="RR10_PP1_M1"/>
+          <MapItem sourceID="RR10_RP1_M1_C1" targetID="RR10_PP1_M1_C1"/>
+          <MapItem sourceID="RR10_RP1_M1_C2" targetID="RR10_PP1_M1_C2"/>
+          <MapItem sourceID="RR10_RP1_M2" targetID="RR10_PP2_M1"/>
+          <MapItem sourceID="RR10_RP1_M2_C1" targetID="RR10_PP2_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <StateChange site="RR10_RP1_M1_C2" finalState="Phos"/>
+          <DeleteBond site1="RR10_RP1_M1_C1" site2="RR10_RP1_M2_C1"/>
+        </ListOfOperations>
+      </ReactionRule>
+      <ReactionRule id="RR11" name="XYunBindPhosCond3" symmetry_factor="1">
+        <ListOfReactantPatterns>
+          <ReactantPattern id="RR11_RP1" label="u">
+            <ListOfMolecules>
+              <Molecule id="RR11_RP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR11_RP1_M1_C1" name="y" numberOfBonds="1"/>
+                  <Component id="RR11_RP1_M1_C2" name="p" state="Unphos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+              <Molecule id="RR11_RP1_M2" name="Y">
+                <ListOfComponents>
+                  <Component id="RR11_RP1_M2_C1" name="x" numberOfBonds="1"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+            <ListOfBonds>
+              <Bond id="RR11_RP1_B1" site1="RR11_RP1_M1_C1" site2="RR11_RP1_M2_C1"/>
+            </ListOfBonds>
+          </ReactantPattern>
+        </ListOfReactantPatterns>
+        <ListOfProductPatterns>
+          <ProductPattern id="RR11_PP1">
+            <ListOfMolecules>
+              <Molecule id="RR11_PP1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="RR11_PP1_M1_C1" name="y" numberOfBonds="0"/>
+                  <Component id="RR11_PP1_M1_C2" name="p" state="Phos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+          <ProductPattern id="RR11_PP2">
+            <ListOfMolecules>
+              <Molecule id="RR11_PP2_M1" name="Y">
+                <ListOfComponents>
+                  <Component id="RR11_PP2_M1_C1" name="x" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </ProductPattern>
+        </ListOfProductPatterns>
+        <RateLaw id="RR11_RateLaw" type="Function" name="_rateLaw6" totalrate="0">
+          <ListOfArguments>
+            <Argument id="u" type="ObjectReference" value="RR11_RP1"/>
+          </ListOfArguments>
+        </RateLaw>
+        <Map>
+          <MapItem sourceID="RR11_RP1_M1" targetID="RR11_PP1_M1"/>
+          <MapItem sourceID="RR11_RP1_M1_C1" targetID="RR11_PP1_M1_C1"/>
+          <MapItem sourceID="RR11_RP1_M1_C2" targetID="RR11_PP1_M1_C2"/>
+          <MapItem sourceID="RR11_RP1_M2" targetID="RR11_PP2_M1"/>
+          <MapItem sourceID="RR11_RP1_M2_C1" targetID="RR11_PP2_M1_C1"/>
+        </Map>
+        <ListOfOperations>
+          <StateChange site="RR11_RP1_M1_C2" finalState="Phos"/>
+          <DeleteBond site1="RR11_RP1_M1_C1" site2="RR11_RP1_M2_C1"/>
+        </ListOfOperations>
+      </ReactionRule>
+    </ListOfReactionRules>
+    <ListOfObservables>
+      <Observable id="O1" name="Xtot" type="Molecules">
+        <ListOfPatterns>
+          <Pattern id="O1_P1">
+            <ListOfMolecules>
+              <Molecule id="O1_P1_M1" name="X"/>
+            </ListOfMolecules>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+      <Observable id="O2" name="Ytot" type="Molecules">
+        <ListOfPatterns>
+          <Pattern id="O2_P1">
+            <ListOfMolecules>
+              <Molecule id="O2_P1_M1" name="Y"/>
+            </ListOfMolecules>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+      <Observable id="O3" name="Wtot" type="Molecules">
+        <ListOfPatterns>
+          <Pattern id="O3_P1">
+            <ListOfMolecules>
+              <Molecule id="O3_P1_M1" name="W"/>
+            </ListOfMolecules>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+      <Observable id="O4" name="XPhos" type="Molecules">
+        <ListOfPatterns>
+          <Pattern id="O4_P1">
+            <ListOfMolecules>
+              <Molecule id="O4_P1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="O4_P1_M1_C1" name="p" state="Phos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+      <Observable id="O5" name="XUnPhos" type="Molecules">
+        <ListOfPatterns>
+          <Pattern id="O5_P1">
+            <ListOfMolecules>
+              <Molecule id="O5_P1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="O5_P1_M1_C1" name="p" state="Unphos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+      <Observable id="O6" name="Xphos" type="Species">
+        <ListOfPatterns>
+          <Pattern id="O6_P1" matchOnce="1">
+            <ListOfMolecules>
+              <Molecule id="O6_P1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="O6_P1_M1_C1" name="p" state="Phos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+      <Observable id="O7" name="XY" type="Species">
+        <ListOfPatterns>
+          <Pattern id="O7_P1" matchOnce="1">
+            <ListOfMolecules>
+              <Molecule id="O7_P1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="O7_P1_M1_C1" name="y" numberOfBonds="1"/>
+                  <Component id="O7_P1_M1_C2" name="p" state="Unphos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+              <Molecule id="O7_P1_M2" name="Y">
+                <ListOfComponents>
+                  <Component id="O7_P1_M2_C1" name="x" numberOfBonds="1"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+            <ListOfBonds>
+              <Bond id="O7_P1_B1" site1="O7_P1_M1_C1" site2="O7_P1_M2_C1"/>
+            </ListOfBonds>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+      <Observable id="O8" name="XW" type="Species">
+        <ListOfPatterns>
+          <Pattern id="O8_P1" matchOnce="1">
+            <ListOfMolecules>
+              <Molecule id="O8_P1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="O8_P1_M1_C1" name="w" numberOfBonds="1"/>
+                </ListOfComponents>
+              </Molecule>
+              <Molecule id="O8_P1_M2" name="W">
+                <ListOfComponents>
+                  <Component id="O8_P1_M2_C1" name="x" numberOfBonds="1"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+            <ListOfBonds>
+              <Bond id="O8_P1_B1" site1="O8_P1_M1_C1" site2="O8_P1_M2_C1"/>
+            </ListOfBonds>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+      <Observable id="O9" name="XYW" type="Species">
+        <ListOfPatterns>
+          <Pattern id="O9_P1" matchOnce="1">
+            <ListOfMolecules>
+              <Molecule id="O9_P1_M1" name="X">
+                <ListOfComponents>
+                  <Component id="O9_P1_M1_C1" name="y" numberOfBonds="1"/>
+                  <Component id="O9_P1_M1_C2" name="w" numberOfBonds="1"/>
+                  <Component id="O9_P1_M1_C3" name="p" state="Unphos" numberOfBonds="0"/>
+                </ListOfComponents>
+              </Molecule>
+              <Molecule id="O9_P1_M2" name="Y">
+                <ListOfComponents>
+                  <Component id="O9_P1_M2_C1" name="x" numberOfBonds="1"/>
+                </ListOfComponents>
+              </Molecule>
+              <Molecule id="O9_P1_M3" name="W">
+                <ListOfComponents>
+                  <Component id="O9_P1_M3_C1" name="x" numberOfBonds="1"/>
+                </ListOfComponents>
+              </Molecule>
+            </ListOfMolecules>
+            <ListOfBonds>
+              <Bond id="O9_P1_B1" site1="O9_P1_M1_C1" site2="O9_P1_M2_C1"/>
+              <Bond id="O9_P1_B2" site1="O9_P1_M1_C2" site2="O9_P1_M3_C1"/>
+            </ListOfBonds>
+          </Pattern>
+        </ListOfPatterns>
+      </Observable>
+    </ListOfObservables>
+    <ListOfFunctions>
+      <Function id="f_molXexist">
+        <ListOfArguments>
+          <Argument id="z"/>
+        </ListOfArguments>
+        <ListOfReferences>
+          <Reference name="z" type="Local"/>
+          <Reference name="Xtot" type="Observable"/>
+        </ListOfReferences>
+        <Expression> if((Xtot(z)&gt;0),1,0) </Expression>
+      </Function>
+      <Function id="f_molYabsent">
+        <ListOfArguments>
+          <Argument id="z"/>
+        </ListOfArguments>
+        <ListOfReferences>
+          <Reference name="z" type="Local"/>
+          <Reference name="Ytot" type="Observable"/>
+        </ListOfReferences>
+        <Expression> if((Ytot(z)&gt;0),0,1) </Expression>
+      </Function>
+      <Function id="f_molWabsent">
+        <ListOfArguments>
+          <Argument id="z"/>
+        </ListOfArguments>
+        <ListOfReferences>
+          <Reference name="z" type="Local"/>
+          <Reference name="Wtot" type="Observable"/>
+        </ListOfReferences>
+        <Expression> if((Wtot(z)&gt;0),0,1) </Expression>
+      </Function>
+      <Function id="f_molYexist">
+        <ListOfArguments>
+          <Argument id="z"/>
+        </ListOfArguments>
+        <ListOfReferences>
+          <Reference name="z" type="Local"/>
+          <Reference name="Ytot" type="Observable"/>
+        </ListOfReferences>
+        <Expression> if((Ytot(z)&gt;0),1,0) </Expression>
+      </Function>
+      <Function id="f_molWexist">
+        <ListOfArguments>
+          <Argument id="z"/>
+        </ListOfArguments>
+        <ListOfReferences>
+          <Reference name="z" type="Local"/>
+          <Reference name="Wtot" type="Observable"/>
+        </ListOfReferences>
+        <Expression> if((Wtot(z)&gt;0),1,0) </Expression>
+      </Function>
+      <Function id="f_molXtoomuch">
+        <ListOfArguments>
+          <Argument id="z"/>
+        </ListOfArguments>
+        <ListOfReferences>
+          <Reference name="OneThird" type="Constant"/>
+          <Reference name="numOfMoleculeX" type="Constant"/>
+          <Reference name="z" type="Local"/>
+          <Reference name="Xtot" type="Observable"/>
+        </ListOfReferences>
+        <Expression> if((Xtot(z)&gt;(numOfMoleculeX*OneThird)),1,0) </Expression>
+      </Function>
+      <Function id="f_molWtoomuch">
+        <ListOfArguments>
+          <Argument id="z"/>
+        </ListOfArguments>
+        <ListOfReferences>
+          <Reference name="OneThird" type="Constant"/>
+          <Reference name="numOfMoleculeW" type="Constant"/>
+          <Reference name="z" type="Local"/>
+          <Reference name="Wtot" type="Observable"/>
+        </ListOfReferences>
+        <Expression> if((Wtot(z)&gt;(numOfMoleculeW*OneThird)),1,0) </Expression>
+      </Function>
+      <Function id="_rateLaw1">
+        <ListOfArguments>
+          <Argument id="u"/>
+        </ListOfArguments>
+        <ListOfReferences>
+          <Reference name="kXWOn1" type="Constant"/>
+          <Reference name="f_molYexist" type="Function"/>
+          <Reference name="u" type="Local"/>
+        </ListOfReferences>
+        <Expression> kXWOn1*f_molYexist(u) </Expression>
+      </Function>
+      <Function id="_rateLaw2">
+        <ListOfArguments>
+          <Argument id="v"/>
+        </ListOfArguments>
+        <ListOfReferences>
+          <Reference name="kXWOn2" type="Constant"/>
+          <Reference name="f_molWtoomuch" type="Function"/>
+          <Reference name="v" type="Local"/>
+        </ListOfReferences>
+        <Expression> kXWOn2*f_molWtoomuch(v) </Expression>
+      </Function>
+      <Function id="_rateLaw4">
+        <ListOfArguments>
+          <Argument id="u"/>
+        </ListOfArguments>
+        <ListOfReferences>
+          <Reference name="kXCat1" type="Constant"/>
+          <Reference name="f_molXexist" type="Function"/>
+          <Reference name="u" type="Local"/>
+        </ListOfReferences>
+        <Expression> kXCat1*f_molXexist(u) </Expression>
+      </Function>
+      <Function id="_rateLaw5">
+        <ListOfArguments>
+          <Argument id="u"/>
+        </ListOfArguments>
+        <ListOfReferences>
+          <Reference name="kXCat2" type="Constant"/>
+          <Reference name="f_molYabsent" type="Function"/>
+          <Reference name="u" type="Local"/>
+        </ListOfReferences>
+        <Expression> kXCat2*f_molYabsent(u) </Expression>
+      </Function>
+      <Function id="_rateLaw6">
+        <ListOfArguments>
+          <Argument id="u"/>
+        </ListOfArguments>
+        <ListOfReferences>
+          <Reference name="kXCat3" type="Constant"/>
+          <Reference name="f_molWabsent" type="Function"/>
+          <Reference name="f_molYexist" type="Function"/>
+          <Reference name="u" type="Local"/>
+        </ListOfReferences>
+        <Expression> (kXCat3*f_molYexist(u))*f_molWabsent(u) </Expression>
+      </Function>
+    </ListOfFunctions>
+  </model>
+</sbml>
