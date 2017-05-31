@@ -1,0 +1,57 @@
+begin model
+
+begin parameters
+
+	numOfMoleculeY  3011
+	numOfMoleculeX  6022
+	dephosRate  0.2
+	kOn  0.0003
+	kOff  0.2
+	kCat  0.1
+	Unphos 0
+	Phos 1
+	
+end parameters
+
+begin molecule types
+
+X(y,p~Unphos~Phos)
+Y(x)
+
+end molecule types
+
+
+
+begin seed species
+
+X(y,p~Unphos) numOfMoleculeX
+
+Y(x) numOfMoleculeY
+
+end seed species
+
+begin observables
+
+Molecules Xtot X()
+Molecules Ytot Y()
+Species Xphos X(p~Phos)
+Molecules XunPhos X(p~Unphos)
+
+end observables
+
+
+begin reaction rules
+
+	X(p~Phos) -> X(p~Unphos)    dephosRate
+	X(y,p~Unphos) + Y(x) <-> X(y!1,p~Unphos).Y(x!1)	kOn,kOff
+	X(y!1,p~Unphos).Y(x!1) -> X(y,p~Phos) + Y(x)	kCat
+end reaction rules
+
+end model
+
+begin actions
+
+simulate({method=>"nf",gml=>2000000,complex=>1,get_final_state=>0,print_functions=>0,\
+          t_start=>0,t_end=>500,n_steps=>500})
+          
+end actions

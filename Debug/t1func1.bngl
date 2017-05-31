@@ -1,0 +1,114 @@
+#model based on simple_test in NFSIM with some modifications
+begin model
+
+begin parameters
+
+	numOfMoleculeX  2000   #6022
+	numOfMoleculeY  2000   #3011
+	numOfMoleculeW  500   #3011
+	
+	XdephosRate  0.1 #was 0.2
+	
+	kXYOn  0.001  #0.0003
+	kXYOff 0.2   
+	
+	kXWOn1   0.05   #0.0003
+	kXWOn2   0.05   #0.0003
+	kXWOff1  0.8
+	kXWOff2  0.8
+	
+	kXCat  0.8# was 0.5   #was 1
+	kXCat1  0.001# was 0.5  
+	kXCat2  0.2# was 0.5   
+	kXCat3  0.8# was 0.5   
+	
+	Unphos 0
+	Phos 1
+	
+	Half 0.5
+	OneThird 0.333333
+end parameters
+
+begin molecule types
+
+X(y,w,p~Unphos~Phos)
+Y(x)
+W(x)
+end molecule types
+
+
+
+begin seed species
+
+X(y,w,p~Unphos) numOfMoleculeX
+Y(x) numOfMoleculeY
+W(x) numOfMoleculeW
+
+end seed species
+
+begin observables
+
+Molecules Xtot X()
+Molecules Ytot Y()
+Molecules Wtot W()
+
+Molecules XPhos X(p~Phos)
+Molecules XUnPhos X(p~Unphos)
+
+Species Xphos X(p~Phos)
+Species XY X(y!1,p~Unphos).Y(x!1)
+Species XW X(w!1).W(x!1)  #including   X(w!1,p~Unphos).W(x!1) + X(w!1,p~Phos).W(x!1)
+Species XYW X(y!1,w!2,p~Unphos).Y(x!1).W(x!2)
+
+end observables
+
+
+begin functions
+
+f_molXexist(z)   if(Xtot(z)>0,1,0)    #Razi added for test
+f_molYabsent(z)  if(Ytot(z)>0,0,1)   #Razi added for test
+f_molWabsent(z)  if(Wtot(z)>0,0,1)   #Razi added for test
+f_molYexist(z) 	 if(Ytot(z)>0,1,0)   #Razi added for test
+f_molWexist(z) 	 if(Wtot(z)>0,1,0)   #Razi added for test
+
+f_molXtoomuch(z) if(Xtot(z) > numOfMoleculeX * OneThird, 1, 0) 
+f_molWtoomuch(z) if(Wtot(z) > numOfMoleculeW * OneThird, 1, 0) 
+
+end functions
+
+
+begin reaction rules
+
+	XUnPhos: X(p~Phos) -> X(p~Unphos)    XdephosRate
+
+	XYBind:        X(y,p~Unphos) + Y(x) <-> X(y!1,p~Unphos).Y(x!1)	kXYOn,kXYOff
+	
+	XWBindCond1: %u:X(w,p~Unphos) + W(x) -> X(w!1,p~Unphos).W(x!1)	kXWOn1*f_molYexist(u) #X binds to W if already binded to Y
+	#XWBindCond2: X(w,p~Unphos) + W(x) -> %u:X(w!1,p~Unphos).W(x!1)	kXWOn1*f_molYexist(u) #X binds to W if already binded to Y
+	XWUnBind: X(w!1,p~Unphos).W(x!1) -> X(w,p~Unphos) + W(x)	kXWOff1 #X binds to W if already binded to Y
+
+
+
+
+	# not supported XphosWBind: %u:X(w,p~Phos) + %v:W(x) <-> X(w!1,p~Phos).W(x!1)	kXWOn2*f_molXtoomuch(u)*f_molWtoomuch(v), kXWOff2 #X binds to W if Xs and Ws are abundant
+	#break down into 2 one-way reaction, was XphosWBind: %u:X(w,p~Phos) + %v:W(x) <-> X(w!1,p~Phos).W(x!1)	kXWOn2*f_molWtoomuch(v), kXWOff2 					  #X binds to W if Ws are abundant
+	XphosWBind: X(w,p~Phos) + %v:W(x) -> X(w!1,p~Phos).W(x!1)	kXWOn2*f_molWtoomuch(v) 					  #X binds to W if Ws are abundant
+	XphosWUnBind: X(w!1,p~Phos).W(x!1) -> X(w,p~Phos) + W(x)        kXWOff2 					  #X binds to W if Ws are abundant
+
+
+	XYunBindPhos:         X(y!1,p~Unphos).Y(x!1) -> X(y,p~Phos) + Y(x)	kXCat*OneThird
+	XYunBindPhosCond1: %u:X(y!1,p~Unphos).Y(x!1) -> X(y,p~Phos) + Y(x)	kXCat1*f_molXexist(u)  #Razi: shall always be 1
+	XYunBindPhosCond2: %u:X(y!1,p~Unphos).Y(x!1) -> X(y,p~Phos) + Y(x)	kXCat2*f_molYabsent(u) #Razi: shall always be 0
+	XYunBindPhosCond3: %u:X(y!1,p~Unphos).Y(x!1) -> X(y,p~Phos) + Y(x)	kXCat3*f_molYexist(u)*f_molWabsent(u) #Razi: depends on existence of W
+	
+	
+end reaction rules
+
+end model
+
+begin actions
+
+simulate({method=>"nf",gml=>2000000,complex=>1,get_final_state=>0,print_functions=>0,\
+          t_start=>0,t_end=>10,n_steps=>50})  #t_end and n_steps was 500
+          
+end actions
