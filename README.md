@@ -72,7 +72,7 @@ Some minor comments and notes to help run the software:
 -Note about Propensity calculation:
 
 It seems that there is a problem in calculating propensities. In the original version, the propensity of a reaction is calculated as base rate * n1*n2*..nk, where ni is the number of the ith reactant.  
-This is problematic and perhaps a better option would be to use baserate*min(n1,n2,....n_k) or baserate*(n1,n2,....n_k)^(1/k).
+This is problematic and perhaps a better option would be to use baserate * min(n1,n2,....n_k) or baserate * (n1,n2,....n_k)^(1/k).
 Consider two reactions: 
 
 	X(p~0)->X(p~1) 0.1  
@@ -81,7 +81,7 @@ Consider two reactions:
 	
 If the initial number of both X and Y species is 100, the propensities of two reactions with the current calculations are
 
-	p1=0.2*100=50 and p2=0.2*100*100=5000>100.
+	p1 = 0.2 * 100 = 50   and    p2=0.2 * 100 * 100=5000 > 100.
 p2 is more than the available reactants of types X(y) and Y(x). 
-It seems incorrect for the second reaction [one may expect a lower rate for the second reaction or a rate below (100*.2=20)]
+It seems incorrect for the second reaction [one may expect a lower rate for the second reaction or a rate below (100 * 0.2=20)]
 This issue needs further test and investigation, so I do not recommend to activate it by setting FIX_A in setting.hh and using the original version.
