@@ -208,6 +208,9 @@ int main(int argc, char *argv[])
     // Begin Execution
 	bool parsed = false;
 	bool verbose = false;
+#ifdef RHS_FUNC  //razi added to check reaction output products
+	bool check_products = false;
+#endif
 	map<string,string> argMap;
 
 
@@ -225,6 +228,13 @@ int main(int argc, char *argv[])
 		if(argMap.find("v")!=argMap.end()) {
 			verbose = true;
 		}
+
+		//First, find the arguments that we might use in any situation
+		if(argMap.find("co")!=argMap.end()) {
+			cout<<"reaction outputs will be checked to avoid potential rings.\n";
+			check_products = true;
+		}
+
 		if(argMap.find("seed")!= argMap.end()) {
 			int seed = abs(NFinput::parseAsInt(argMap,"seed",0));
 			NFutil::SEED_RANDOM(seed);
@@ -266,6 +276,9 @@ int main(int argc, char *argv[])
 		{
 			System *s = initSystemFromFlags(argMap, verbose);
 			if(s!=NULL) {
+#ifdef RHS_FUNC  //razi added to check reaction output products
+				s->set_check_products(check_products);
+#endif
 				runFromArgs(s,argMap,verbose);
 			}
 			parsed = true;
