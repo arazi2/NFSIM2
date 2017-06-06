@@ -171,7 +171,7 @@ namespace NFcore
 			*/
 
 #ifdef RHS_FUNC //Razi added to support RHS functions
-			bool transform(MappingSet **mappingSets, bool testmode);
+			bool transform(MappingSet **mappingSets, bool testmode, bool check_ring);
 #endif
 			bool transform(MappingSet **mappingSets);
 

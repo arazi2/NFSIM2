@@ -495,7 +495,7 @@ void BasicRxnClass::printFullDetails() const
 			for (i =0 ; i < n_printItems; i++){
 				if (mappingSet[i]){
 					try{
-						cout<<" Check why there is an error in the following line for i:"<<i<<endl;
+						cout<<" Check the following line for i:"<<i<<" ...\n";
 						//cout<<"A-mappsingSet Id: "<< mappingSet[i]->getId() << " # of mappings:" << mappingSet[i]->getNumOfMappings() << " complex Id:" << mappingSet[i]->getComplexID()<<endl;
 					}catch(std::string err){ //int e string err
 						cout<<"BasicRxnClass::printFullDetails: Error occurred for i:"<<i<<"  Err:"<< err<< endl; mypause(5000);//" Err:"<<err<<" !!!"<<endl;

@@ -64,10 +64,12 @@ namespace NFcore
 
 			//static void test1(System *s);
 
+			/*moved to reactionClass
 			//Razi added to handle RHS functions
 			unsigned int n_productTemplates;
 			virtual bool checkReaction();   //clone reactants
 			MappingSet ** check_mappingSet; //include pointers to test molecules
+			*/
 
 		protected:
 
@@ -78,29 +80,22 @@ namespace NFcore
 			ReactantList **reactantLists;
 			ReactantList **productLists;
 
-			MappingSet *ms;
-
-
-			CompositeFunction *cfo;
+//razi: moved to reactionClass			MappingSet *ms;
+//razi: moved to reactionClass			CompositeFunction *cfo;
 			int n_argMolecules;
 			int * argIndexIntoMappingSet;
 			Molecule ** argMappedMolecule;
 			int * argScope;
 
 
-//Razi added to support RHS functions
-//			CompositeFunction *cfo;
 //			bool includeRHSFunc;
 
 			//Parameters to keep track of local functions
-			int DORproductIndex;
-
+//razi moved to reactionClass			int DORproductIndex;
 			ReactantList *rl;  //Razi: From Basic Rxn
 
 
 			//vector <int> argIndexIntoMappingSet;
-
-
 
 			//vector <LocalFunction *> lfList;
 			//vector <int> indexIntoMappingSet;

@@ -10,6 +10,8 @@ list <Molecule *> TransformationSet::deleteList;
 list <Molecule *> TransformationSet::updateAfterDeleteList;
 list <Molecule *>::iterator TransformationSet::it;
 
+
+
 TransformationSet::TransformationSet(vector <TemplateMolecule *> reactantTemplates)
 {
 	this->hasSymUnbinding=false;
@@ -893,8 +895,12 @@ int TransformationSet::find(TemplateMolecule *t)
 
 
 #ifdef RHS_FUNC //Razi added to support RHS functions
-bool TransformationSet::transform(MappingSet **mappingSets, bool testmode)
+bool TransformationSet::transform(MappingSet **mappingSets, bool testmode, bool check_ring)
 {
+	bool result = true;
+	list <Molecule *> neighbours;
+
+
 	if(!finalized) { cerr<<"TransformationSet cannot apply a transform if it is not finalized!"<<endl; exit(1); }
 
 	// addMolecule transforms are applied before other transforms so the molecules exist
@@ -908,7 +914,7 @@ bool TransformationSet::transform(MappingSet **mappingSets, bool testmode)
 		int size = addMoleculeTransformations.size();
 		if(size>0) {
 			for(int i=0; i<size; i++) {
-				addMoleculeTransformations.at(i)->apply_and_map( mappingSets[n_reactants+i]  );
+				addMoleculeTransformations.at(i)->apply_and_map( mappingSets[n_reactants+i]);
 			}
 		}
 
@@ -948,7 +954,32 @@ bool TransformationSet::transform(MappingSet **mappingSets, bool testmode)
 			{	// handle other transforms
 				//if (RAZI_DEBUG & SHOW_FIRE) {cout<<"Transform:  reactant:"<<r<<"  transformation:"<<t<<"  transformation type:"<< transformations[r].at(t)->getType()<<".\n";//ms->get(t)->printDetails(); mypause(-1);}
 
-				transformations[r].at(t)->apply(ms->get(t), mappingSets);
+
+				if (check_ring && (transformations[r].at(t)->getType()==(int)TransformationFactory::UNBINDING) ){
+					//make sure that unbin breakes down the involving molecules into separate islands [there is no other connection]
+
+					Molecule * mol1 = ms->get(t)->getMolecule();
+					int index1 = ms->get(t)->getIndex();
+					Molecule * mol2 = mol1->getBondedMolecule(index1);
+					if ((!mol1)||(!mol2)){
+						cout<<"Transformation Error: Try to unbond two molecules that does not exist\n.";
+						result=false;
+					}
+					transformations[r].at(t)->apply(ms->get(t), mappingSets);
+
+					//razi: find connected molecules after applying the unbind transformation
+					mol1->traverseBondedNeighborhood(neighbours, ReactionClass::NO_LIMIT);
+					for (list <Molecule *>::iterator it= neighbours.begin(); it!=neighbours.end(); it++){
+						if ((*it)->getUniqueID() == mol2->getUniqueID()){
+							cout<<"Transformation Error: Try to unbond two molecules, but there is an alternative connection!!!\n.";
+							result=false;
+						}
+					}
+				}
+				else{
+					transformations[r].at(t)->apply(ms->get(t), mappingSets);
+				}
+
 			}
 		}
 	}
@@ -964,11 +995,12 @@ bool TransformationSet::transform(MappingSet **mappingSets, bool testmode)
 		}
 		deleteList.clear();
 	}
-	return true;
+
+	return result;
 }
 
 bool TransformationSet::transform(MappingSet **mappingSets){
-	return TransformationSet::transform(mappingSets, false);
+	return TransformationSet::transform(mappingSets, false, false);
 }
 
 #else
