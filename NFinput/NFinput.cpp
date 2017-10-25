@@ -2104,7 +2104,7 @@ bool NFinput::initReactionRules(
 
 								CompositeFunction *cf = s->getCompositeFunctionByName(functionName);
 								if (show_flag){
-									cls();
+								//	cls();
 									cout<<"\n ----------------------------------------A3-----------------------------------------------\n\n";
 									s->printAllMoleculeTypes(); mypause(10);  //debug, later del
 								 	cf->printDetails(s);

@@ -621,7 +621,7 @@ void ReactionClass::fire(double random_A_number) {
 
 	//display final product molecules for debugging..
 
-#ifdef RHS_FUNC
+#if RAZI_DEBUG == 0x0FFF
 	if(system->getverbose() && 0 && (RAZI_DEBUG & SHOW_RHS))
 	for( molIter = products.begin(); molIter != products.end(); molIter++ ) {
 		cout<<">>molecule: "<<(*molIter)->getMoleculeTypeName()<<endl;

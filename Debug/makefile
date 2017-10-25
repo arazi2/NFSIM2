@@ -30,7 +30,6 @@ RM := rm -rf
 -include NFcore/reactionSelector/subdir.mk
 -include NFcore/moleculeLists/subdir.mk
 -include NFcore/subdir.mk
--include .metadata/.plugins/org.eclipse.cdt.make.core/subdir.mk
 -include subdir.mk
 -include objects.mk
 
