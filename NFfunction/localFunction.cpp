@@ -440,10 +440,10 @@ double LocalFunction::evaluateOnTestMol(Molecule *m, int scope, bool verbose) {
 
 	if(scope==LocalFunction::SPECIES) {
 
-		if(!isEverEvaluatedOnSpeciesScope) {
+		//if(!isEverEvaluatedOnSpeciesScope) {
 			//cout <<"LocalFunction::evaluateOn Error. Is not evaluated yet.\n";
-			return 0;
-		}
+		//	return 0;
+		//}
 
 		molList.clear();
 
