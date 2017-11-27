@@ -29,7 +29,7 @@ using namespace std;
 
 //razi added this function for test purpose, last update 2017-3-29
 void mypause(float ms = WTIME){
-	//return;
+	return;
 
 	int cnt=0;
 	const char ch[] = "/-\\-";
